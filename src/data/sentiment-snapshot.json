@@ -1,0 +1,202 @@
+{
+  "fed-rate-cut-2026": {
+    "score": -62,
+    "confidence": "medium",
+    "summary": "The dominant narrative over the last 30 days is that Fed rate cuts in 2026 are essentially off the table, with markets now pricing a meaningful probability of rate hikes instead. Polymarket's highest-volume market ($9M) shows 81% odds of zero Fed rate cuts in 2026, while the rate hike probability sits at 48%. Inflation pressures from the Iran war, a new hawkish Fed chair (Kevin Warsh), and a strong May jobs report have collectively killed the easing narrative.",
+    "best_takes": [
+      {
+        "source": "Reddit",
+        "text": "Fed cut narrative is basically dead. Morgan Stanley sees Fed frozen at 3.50-3.75% through 2026; JPMorgan now fully prices a hike.",
+        "engagement": "r/WallStreetbetsELITE post, multiple bank citations"
+      },
+      {
+        "source": "Reddit",
+        "text": "Fed's worst inflation fears coming true; consumers losing faith in long-term prices even among Trump supporters.",
+        "engagement": "2.9K upvotes, 174 comments"
+      },
+      {
+        "source": "Reddit",
+        "text": "Rate futures signal 98% probability of 2026 Fed hike; 10-year Treasury breaks past 4.5%, shipping costs up 80%.",
+        "engagement": "r/GlobalEconomyUS briefing, June 6"
+      },
+      {
+        "source": "Reddit",
+        "text": "Markets anticipate higher interest rates after strong May jobs report of 172K vs 85K expected.",
+        "engagement": "402 upvotes, 81 comments"
+      }
+    ],
+    "signals": [
+      "Polymarket 81% odds on zero Fed rate cuts in 2026 ($9M volume)",
+      "Polymarket 48% probability of a Fed rate hike in 2026 ($494K volume), up 29% this month",
+      "Kevin Warsh confirmed as new Fed chair 54-45, inheriting CPI at 3.8% and PPI at 6%",
+      "FOMC minutes: majority anticipate rate hike if Iran war inflation persists",
+      "May NFP +172K vs 85K expected; unemployment steady at 4.3% — eliminates labor-market justification for cuts",
+      "Rate futures briefly priced 98% probability of 2026 hike per one Reddit brief",
+      "10-year Treasury yield broke above 4.5%",
+      "Polymarket emergency Fed rate cut before 2027: only 9% odds",
+      "Kevin Warsh first-meeting rate cut: 1.4% odds on Polymarket",
+      "Fed cut by December 2026 meeting: only 22% odds on Polymarket"
+    ],
+    "volume_score": 52,
+    "volume_label": "~3.6K Reddit upvotes across 16 threads; $9M+ Polymarket volume; 127 HN points",
+    "data_sources": [
+      "Reddit",
+      "Polymarket",
+      "Hacker News",
+      "GitHub"
+    ],
+    "slug": "fed-rate-cut-2026",
+    "brief_saved_at": "2026-06-07T05:19:58.440Z",
+    "parsed_at": "2026-06-07T06:09:09.241Z"
+  },
+  "bitcoin-price-prediction-2026": {
+    "score": -28,
+    "confidence": "medium",
+    "summary": "Bitcoin sentiment is broadly bearish in early June 2026, with BTC trading around $66K-$67K after dropping below $65K intraday, triggering $1.8B in liquidations and record ETF outflows of $3.4B in a single week. Prediction markets lean pessimistic near-term: Kalshi shows 83% probability BTC hits $60K before $100K, and only 27% odds of six figures in 2026. High-conviction long-term holders are capitulating, though some bulls frame current prices as a buying opportunity.",
+    "best_takes": [
+      {
+        "source": "Reddit",
+        "text": "Bitcoin lost $66K while Nvidia hit all-time highs; long-time bulls are now selling their holdings.",
+        "engagement": "2,000 upvotes, 741 comments"
+      },
+      {
+        "source": "Reddit",
+        "text": "Bitcoin investors 'rage quitting' as longtime crypto bulls offload BTC positions en masse.",
+        "engagement": "1,076 upvotes, 639 comments"
+      },
+      {
+        "source": "Reddit",
+        "text": "Bitcoin dropped 6% in a day while AI stocks hit all-time highs — nobody asking the obvious question.",
+        "engagement": "1,296 upvotes, 473 comments"
+      },
+      {
+        "source": "HN",
+        "text": "Bitcoin high-conviction holders turning into sellers as price hits new 2026 lows.",
+        "engagement": "4 points"
+      }
+    ],
+    "signals": [
+      "Bitcoin trading ~$66-67K, down sharply from May highs near $78K+",
+      "Record $3.4B single-week ETF outflows in June 2026; $4.4B total since May 15",
+      "Kalshi: 83% probability BTC hits $60K before $100K in 2026",
+      "Polymarket: only 27% chance of six figures for BTC in 2026",
+      "Bitcoin down ~14.5% vs Gold YTD; S&P 500 favored to outperform BTC in 2026 (42% vs 17%)",
+      "High-conviction long-term holders capitulating and selling",
+      "$1.8B forced liquidations on June 3 — largest since February 2026",
+      "Analyst predicts BTC could still regain $100K but near-term path bearish",
+      "MSTR sold Bitcoin for first time since 2022 amid quantum risk concerns",
+      "Polymarket: 66% odds BTC reaches $100K in June still remain despite selloff",
+      "Bitcoin best month market points to Oct/Nov/Dec as recovery candidates"
+    ],
+    "volume_score": 62,
+    "volume_label": "~7.8K Reddit upvotes across 23 threads; $8.5M Polymarket volume on annual BTC market; 413 HN points across 11 items",
+    "data_sources": [
+      "Reddit",
+      "Polymarket",
+      "HN",
+      "GitHub"
+    ],
+    "slug": "bitcoin-price-prediction-2026",
+    "brief_saved_at": "2026-06-07T05:29:44.315Z",
+    "parsed_at": "2026-06-07T06:09:26.481Z"
+  },
+  "nvidia-nvda-earnings-2026": {
+    "score": 72,
+    "confidence": "medium",
+    "summary": "NVIDIA delivered a blowout Q1 FY2027 beat on May 20, 2026: revenue $81.6B (+85% YoY), EPS $1.87 vs $1.76 est, and Q2 guidance of $91B well above the $86.79B consensus. Despite the record results, the stock exhibited a post-earnings 'sell the news' pattern as the pre-earnings 13.7% rally had already priced in the beat. Longer-term sentiment remains strongly bullish, with Wall Street price targets up to $330, an $80B buyback, and Blackwell supply sold out through mid-2026.",
+    "best_takes": [
+      {
+        "source": "Reddit",
+        "text": "NVDA beat on revenue ($81.6B), EPS ($1.87), and raised Q2 guidance to $91B with new $80B buyback.",
+        "engagement": "r/NVDA_Stock post + multiple thread confirmations"
+      },
+      {
+        "source": "Reddit",
+        "text": "Revenue $82B, +85% YoY; data center $75B +92%; free cash flow record $49B — fourteenth straight sequential growth quarter.",
+        "engagement": "r/EarningsCalls detailed breakdown"
+      },
+      {
+        "source": "Reddit",
+        "text": "Top Wall Street names see NVDA at $330, but buyers walked out post-earnings despite monster numbers.",
+        "engagement": "106 upvotes, 80 comments"
+      },
+      {
+        "source": "Reddit",
+        "text": "Nvidia N1X launch teased at Computex 2026; huge community excitement about new product expansion.",
+        "engagement": "702 upvotes, 322 comments"
+      }
+    ],
+    "signals": [
+      "Q1 FY2027 revenue $81.6B beat $78.86B estimate by ~3.5%",
+      "Q2 FY2027 guidance $91B vs $86.79B consensus — another raise",
+      "Data center revenue $75B, +92% YoY",
+      "Record free cash flow $49B; new $80B share buyback authorized",
+      "Pre-earnings stock rally of 13.7% caused 'sell the news' post-earnings dip",
+      "Blackwell GPU systems sold out through mid-2026 — supply constrained not demand constrained",
+      "Wall Street price targets raised to $325–$330",
+      "Bullish whale options: $4.5M in June $220 calls post-earnings",
+      "Jensen Huang keynotes at both Computex 2026 and GTC Taipei signaling product pipeline momentum",
+      "Nvidia Cosmos 3 launch generating developer buzz on Hacker News (149 pts)"
+    ],
+    "volume_score": 52,
+    "volume_label": "~830 Reddit upvotes across 16 threads, 191 HN pts across 7 posts, 419 Reddit comments",
+    "data_sources": [
+      "Reddit",
+      "Hacker News",
+      "GitHub"
+    ],
+    "slug": "nvidia-nvda-earnings-2026",
+    "brief_saved_at": "2026-06-07T05:47:02.500Z",
+    "parsed_at": "2026-06-07T06:09:43.395Z"
+  },
+  "us-recession-2026": {
+    "score": -28,
+    "confidence": "medium",
+    "summary": "Polymarket prices a US recession by end-2026 at only 20% (down 3% this month), suggesting prediction markets lean against a near-term recession. However, Reddit and analyst commentary highlight serious warning signs: temp-help employment down 21.4%, LEI/CEI ratio at 2008-crisis lows, Iran-war energy shock, and Canada already in technical recession. Wall Street estimates range from Goldman's 20% to Moody's/Zandi's 49%, with the consensus tilting toward stagflation risk rather than outright recession.",
+    "best_takes": [
+      {
+        "source": "Reddit",
+        "text": "Gas up, groceries up, hiring slowed—Iran war bleeding into everything. Stock market still climbing though; Wall Street puts recession odds at ~1-in-3.",
+        "engagement": "16 upvotes"
+      },
+      {
+        "source": "Reddit",
+        "text": "Temp-help employment down 21.4%—a signal that has preceded every US recession since 1990. Headline unemployment is misleading.",
+        "engagement": "r/investing post"
+      },
+      {
+        "source": "Reddit",
+        "text": "LEI/CEI ratio at 0.84, matching 2008 crisis lows—a level never seen outside a recession in the full data history.",
+        "engagement": "r/ai_trading post"
+      },
+      {
+        "source": "HN",
+        "text": "Canada entered technical recession in Q1 2026, GDP -0.1% after -1.0% in Q4 2025; US tariffs a key driver.",
+        "engagement": "68 pts, 36 comments"
+      }
+    ],
+    "signals": [
+      "Polymarket US recession 2026 odds at 20%, down 3% this month — market leans NO",
+      "Goldman Sachs cut recession probability to 20%; JPMorgan at 35%; Moody's/Zandi most bearish at 49%",
+      "Temp-help employment down 21.4% — historical leading recession indicator",
+      "LEI/CEI ratio at 0.84, matching 2008 Financial Crisis lows",
+      "Iran war drove energy shock; gas prices up $1+/gallon YTD; Atlanta Fed GDP estimate fell from 3.6% to 1.9%",
+      "Canada in technical recession Q1 2026; contagion risk via trade linkages",
+      "Philadelphia Fed Manufacturing Survey major miss (-0.4 vs 19.0 est.)",
+      "Goldman expects 2 Fed rate cuts (June + September 2026); JPMorgan expects none in 2026",
+      "Stagflation flagged as primary tail risk with tariff pass-through >50%",
+      "Stock market and corporate earnings diverging positively from macro indicators"
+    ],
+    "volume_score": 38,
+    "volume_label": "~108K Polymarket volume, 89 HN pts, 12 Reddit threads, moderate engagement overall",
+    "data_sources": [
+      "Reddit",
+      "HN",
+      "Polymarket",
+      "GitHub"
+    ],
+    "slug": "us-recession-2026",
+    "brief_saved_at": "2026-06-07T05:49:50.560Z",
+    "parsed_at": "2026-06-07T06:10:00.443Z"
+  }
+}
