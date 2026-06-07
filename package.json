@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "snapshot": "node --env-file=.env.local --import tsx scripts/build-snapshot.ts"
+    "snapshot": "node --env-file=.env.local --import tsx scripts/build-snapshot.ts",
+    "scout": "node --env-file=.env.local --import tsx scripts/scout.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.102.0",
