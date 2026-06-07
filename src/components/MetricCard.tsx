@@ -5,14 +5,44 @@ interface MetricCardProps {
   value: string | number
   sub?: string
   highlight?: boolean
+  accentColor?: string
 }
 
-export function MetricCard({ label, value, sub, highlight }: MetricCardProps) {
+export function MetricCard({ label, value, sub, highlight, accentColor }: MetricCardProps) {
+  const accent = accentColor ?? (highlight ? "var(--watch)" : "var(--border)")
   return (
-    <div className={`rounded-xl border p-4 ${highlight ? "border-yellow-500/50 bg-yellow-500/5" : "border-white/10 bg-white/5"}`}>
-      <p className="text-xs text-gray-400 uppercase tracking-wide">{label}</p>
-      <p className="mt-1 text-2xl font-bold text-white">{value}</p>
-      {sub && <p className="mt-0.5 text-xs text-gray-500">{sub}</p>}
+    <div style={{
+      padding: "14px 16px",
+      background: "var(--bg-panel)",
+      borderLeft: `3px solid ${accent}`,
+      borderRadius: "0 8px 8px 0",
+    }}>
+      <p style={{
+        fontSize: 10,
+        fontWeight: 600,
+        letterSpacing: "0.08em",
+        textTransform: "uppercase",
+        color: "var(--text-lo)",
+        margin: 0,
+        marginBottom: 6,
+      }}>
+        {label}
+      </p>
+      <p
+        className="mono"
+        style={{
+          fontSize: 22,
+          fontWeight: 700,
+          color: highlight ? accent : "var(--text-hi)",
+          lineHeight: 1,
+          margin: 0,
+        }}
+      >
+        {value}
+      </p>
+      {sub && (
+        <p style={{ fontSize: 11, color: "var(--text-lo)", margin: 0, marginTop: 4 }}>{sub}</p>
+      )}
     </div>
   )
 }

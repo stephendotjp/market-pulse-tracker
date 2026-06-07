@@ -5,35 +5,57 @@ interface SentimentBarProps {
   confidence?: "high" | "medium" | "low"
 }
 
-export function SentimentBar({ score, confidence }: SentimentBarProps) {
-  const normalized = (score + 100) / 2
-  const color =
-    score > 30 ? "bg-green-500" :
-    score < -30 ? "bg-red-500" :
-    "bg-yellow-500"
-  const label =
-    score > 30 ? "Bullish" :
-    score < -30 ? "Bearish" :
-    "Neutral"
-  const confidenceColor =
-    confidence === "high" ? "text-green-400" :
-    confidence === "medium" ? "text-yellow-400" :
-    "text-gray-400"
+export function SentimentBar({ score }: SentimentBarProps) {
+  const half = Math.abs(score) / 2  // 0–50, fills half the bar
+  const isPos = score >= 0
+  const color = isPos ? "var(--bull)" : "var(--bear)"
+  const sign = score > 0 ? "+" : ""
 
   return (
-    <div className="space-y-1">
-      <div className="flex items-center justify-between text-xs">
-        <span className="text-gray-400">{label} ({score > 0 ? "+" : ""}{score})</span>
-        {confidence && (
-          <span className={`capitalize ${confidenceColor}`}>{confidence}</span>
-        )}
+    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+      {/* Centered diverging bar */}
+      <div style={{
+        position: "relative",
+        height: 6,
+        width: 96,
+        background: "var(--border)",
+        borderRadius: 100,
+        flexShrink: 0,
+      }}>
+        {/* Fill */}
+        <div style={{
+          position: "absolute",
+          top: 0,
+          height: "100%",
+          borderRadius: 100,
+          background: color,
+          left: isPos ? "50%" : `${50 - half}%`,
+          width: `${half}%`,
+          transition: "width 0.4s ease, left 0.4s ease",
+        }} />
+        {/* Center tick */}
+        <div style={{
+          position: "absolute",
+          top: 0, bottom: 0,
+          left: "50%",
+          width: 1,
+          transform: "translateX(-50%)",
+          background: "var(--bg-base)",
+        }} />
       </div>
-      <div className="h-1.5 w-full rounded-full bg-white/10">
-        <div
-          className={`h-full rounded-full ${color} transition-all`}
-          style={{ width: `${normalized}%` }}
-        />
-      </div>
+
+      {/* Score */}
+      <span
+        className="mono"
+        style={{
+          fontSize: 11,
+          color,
+          minWidth: "3.5ch",
+          textAlign: "right",
+        }}
+      >
+        {sign}{score}
+      </span>
     </div>
   )
 }

@@ -1,5 +1,13 @@
 "use client"
 
+const catColors: Record<string, string> = {
+  macro:    "var(--cat-macro)",
+  crypto:   "var(--cat-crypto)",
+  equities: "var(--cat-equities)",
+  politics: "var(--cat-politics)",
+  all:      "var(--text-hi)",
+}
+
 interface CategoryTabsProps {
   categories: string[]
   active: string
@@ -10,23 +18,39 @@ interface CategoryTabsProps {
 export function CategoryTabs({ categories, active, onChange, counts }: CategoryTabsProps) {
   const all = ["all", ...categories]
   return (
-    <div className="flex gap-1 overflow-x-auto">
-      {all.map(cat => (
-        <button
-          key={cat}
-          onClick={() => onChange(cat)}
-          className={`rounded-full px-3 py-1.5 text-xs font-medium capitalize transition-colors whitespace-nowrap ${
-            active === cat
-              ? "bg-blue-600 text-white"
-              : "bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white"
-          }`}
-        >
-          {cat}
-          {counts && counts[cat] !== undefined && (
-            <span className="ml-1 opacity-60">{counts[cat]}</span>
-          )}
-        </button>
-      ))}
+    <div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
+      {all.map(cat => {
+        const isActive = active === cat
+        const color = catColors[cat] ?? "var(--text-mid)"
+        return (
+          <button
+            key={cat}
+            onClick={() => onChange(cat)}
+            style={{
+              padding: "5px 12px",
+              borderRadius: 100,
+              fontSize: 11,
+              fontWeight: isActive ? 600 : 500,
+              letterSpacing: "0.04em",
+              textTransform: "capitalize",
+              cursor: "pointer",
+              transition: "all 0.12s",
+              border: isActive ? "1px solid transparent" : "1px solid var(--border)",
+              background: isActive ? color : "transparent",
+              color: isActive ? "var(--bg-base)" : "var(--text-mid)",
+              whiteSpace: "nowrap",
+              outline: "none",
+            }}
+          >
+            {cat}
+            {counts?.[cat] !== undefined && (
+              <span style={{ marginLeft: 5, opacity: 0.65, fontSize: 10 }}>
+                {counts[cat]}
+              </span>
+            )}
+          </button>
+        )
+      })}
     </div>
   )
 }

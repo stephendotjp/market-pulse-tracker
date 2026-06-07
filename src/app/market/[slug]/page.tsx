@@ -6,14 +6,21 @@ import { getSentiment } from "@/lib/sentiment"
 import { calculateDivergence } from "@/lib/divergence"
 import { OddsPill } from "@/components/OddsPill"
 import { SentimentBar } from "@/components/SentimentBar"
-import { DivergenceSignal } from "@/components/DivergenceSignal"
+import { DivergenceCell } from "@/components/DivergenceCell"
 import { BriefAge } from "@/components/BriefAge"
-import { TrendChart } from "@/components/TrendChart"
+import { Sparkline } from "@/components/Sparkline"
 import { BestTakes } from "@/components/BestTakes"
 import { MissingBriefBanner } from "@/components/MissingBriefBanner"
 import { ArrowLeft } from "lucide-react"
 
 export const revalidate = 300
+
+const catColors: Record<string, string> = {
+  macro:    "#7C8CF8",
+  crypto:   "#F5A623",
+  equities: "#4FD1C5",
+  politics: "#E573B5",
+}
 
 interface Props {
   params: Promise<{ slug: string }>
@@ -35,49 +42,60 @@ export default async function MarketPage({ params }: Props) {
     ? calculateDivergence(market.odds, sentiment.score, market.volume)
     : null
 
-  const sentimentOdds = sentiment ? Math.round((sentiment.score + 100) / 2) : undefined
   const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? ""
+  const catColor = catColors[tracked.category] ?? "#9BA1AC"
 
   return (
-    <main className="min-h-screen bg-[#0d1117] p-4 sm:p-6">
-      <div className="mx-auto max-w-2xl space-y-6">
-        <Link
-          href={`${BASE}/`}
-          className="inline-flex items-center gap-1.5 text-sm text-gray-400 hover:text-white"
-        >
-          <ArrowLeft size={14} />
-          Back to dashboard
+    <main style={{ minHeight: "100vh", background: "var(--bg-base)", padding: "20px 16px 48px" }}>
+      <div style={{ maxWidth: 640, margin: "0 auto", display: "flex", flexDirection: "column", gap: 20 }}>
+
+        <Link href={`${BASE}/`} style={{
+          display: "inline-flex", alignItems: "center", gap: 6,
+          fontSize: 13, color: "var(--text-lo)", textDecoration: "none",
+        }}>
+          <ArrowLeft size={13} />
+          Dashboard
         </Link>
 
+        {/* Title */}
         <div>
-          <div className="flex items-center gap-2">
-            <span className="rounded bg-white/10 px-1.5 py-0.5 text-xs text-gray-400 capitalize">
-              {tracked.category}
-            </span>
+          <span style={{
+            fontSize: 10, fontWeight: 700, letterSpacing: "0.06em", textTransform: "uppercase",
+            color: catColor, background: `${catColor}18`, padding: "2px 6px", borderRadius: 3,
+          }}>
+            {tracked.category}
+          </span>
+          <h1 style={{ margin: "8px 0 4px", fontSize: 22, fontWeight: 700, color: "var(--text-hi)", letterSpacing: "-0.02em" }}>
+            {tracked.label}
+          </h1>
+          {tracked.description && (
+            <p style={{ margin: 0, fontSize: 13, color: "var(--text-lo)" }}>{tracked.description}</p>
+          )}
+          <div style={{ marginTop: 6 }}>
             <BriefAge savedAt={sentiment?.brief_saved_at ?? null} />
           </div>
-          <h1 className="mt-2 text-2xl font-bold text-white">{tracked.label}</h1>
-          {tracked.description && (
-            <p className="mt-1 text-sm text-gray-400">{tracked.description}</p>
-          )}
         </div>
 
-        {/* Odds + Signal */}
-        <div className="flex flex-wrap items-center gap-4 rounded-xl border border-white/10 bg-white/5 p-4">
+        {/* Metrics */}
+        <div style={{
+          display: "flex", flexWrap: "wrap", gap: 20, alignItems: "center",
+          background: "var(--bg-panel)", border: "1px solid var(--border)",
+          borderRadius: 10, padding: "14px 16px",
+        }}>
           <div>
-            <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Market Odds</p>
+            <p style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.07em", textTransform: "uppercase", color: "var(--text-lo)", marginBottom: 6 }}>Odds</p>
             <OddsPill odds={market?.odds ?? null} />
           </div>
           <div>
-            <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Signal</p>
-            <DivergenceSignal divergence={divergence} />
+            <p style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.07em", textTransform: "uppercase", color: "var(--text-lo)", marginBottom: 6 }}>Divergence</p>
+            <DivergenceCell divergence={divergence} />
           </div>
-          {market?.volume != null && (
+          {market?.volume != null && market.volume > 0 && (
             <div>
-              <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Volume</p>
-              <p className="text-sm font-medium text-white">
+              <p style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.07em", textTransform: "uppercase", color: "var(--text-lo)", marginBottom: 6 }}>Volume</p>
+              <span className="mono" style={{ fontSize: 14, fontWeight: 600, color: "var(--text-hi)" }}>
                 ${(market.volume / 1_000).toFixed(0)}K
-              </p>
+              </span>
             </div>
           )}
         </div>
@@ -88,31 +106,45 @@ export default async function MarketPage({ params }: Props) {
 
         {/* Sentiment */}
         {sentiment && (
-          <div className="space-y-3 rounded-xl border border-white/10 bg-white/5 p-4">
-            <p className="text-xs text-gray-500 uppercase tracking-wide">Social Sentiment</p>
-            <SentimentBar score={sentiment.score} confidence={sentiment.confidence} />
+          <div style={{ background: "var(--bg-panel)", border: "1px solid var(--border)", borderRadius: 10, padding: "14px 16px" }}>
+            <p style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.07em", textTransform: "uppercase", color: "var(--text-lo)", marginBottom: 10 }}>
+              Social Sentiment
+            </p>
+            <SentimentBar score={sentiment.score} />
             {sentiment.summary && (
-              <p className="text-sm text-gray-300 leading-relaxed">{sentiment.summary}</p>
+              <p style={{ margin: "10px 0 0", fontSize: 13, color: "var(--text-mid)", lineHeight: 1.6 }}>
+                {sentiment.summary}
+              </p>
             )}
           </div>
         )}
 
-        {/* Chart */}
-        {market?.history && market.history.length > 0 && (
-          <div className="rounded-xl border border-white/10 bg-white/5 p-4">
-            <p className="mb-3 text-xs text-gray-500 uppercase tracking-wide">7-Day Price History</p>
-            <TrendChart history={market.history} sentimentOdds={sentimentOdds} />
+        {/* Sparkline */}
+        {market?.history && market.history.length >= 2 && (
+          <div style={{ background: "var(--bg-panel)", border: "1px solid var(--border)", borderRadius: 10, padding: "14px 16px" }}>
+            <p style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.07em", textTransform: "uppercase", color: "var(--text-lo)", marginBottom: 10 }}>
+              7-Day Price History
+            </p>
+            <div style={{ background: "var(--bg-base)", borderRadius: 6, padding: "10px 10px 4px" }}>
+              <Sparkline history={market.history} currentOdds={market.odds > 0 ? market.odds : undefined} />
+              <div style={{ display: "flex", justifyContent: "space-between", marginTop: 2 }}>
+                <span style={{ fontSize: 10, color: "var(--text-lo)" }}>7d ago</span>
+                <span style={{ fontSize: 10, color: "var(--text-lo)" }}>now</span>
+              </div>
+            </div>
           </div>
         )}
 
-        {/* Key Signals */}
+        {/* Signals */}
         {sentiment?.signals && sentiment.signals.length > 0 && (
-          <div className="rounded-xl border border-white/10 bg-white/5 p-4 space-y-2">
-            <p className="text-xs text-gray-500 uppercase tracking-wide">Key Signals</p>
-            <ul className="space-y-1">
+          <div style={{ background: "var(--bg-panel)", border: "1px solid var(--border)", borderRadius: 10, padding: "14px 16px" }}>
+            <p style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.07em", textTransform: "uppercase", color: "var(--text-lo)", marginBottom: 10 }}>
+              Key Signals
+            </p>
+            <ul style={{ margin: 0, padding: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: 6 }}>
               {sentiment.signals.map((s, i) => (
-                <li key={i} className="flex items-start gap-2 text-sm text-gray-300">
-                  <span className="mt-1.5 h-1 w-1 flex-shrink-0 rounded-full bg-blue-400" />
+                <li key={i} style={{ display: "flex", alignItems: "flex-start", gap: 8, fontSize: 13, color: "var(--text-mid)" }}>
+                  <span style={{ marginTop: 6, flexShrink: 0, width: 4, height: 4, borderRadius: "50%", background: "var(--info)", display: "block" }} />
                   {s}
                 </li>
               ))}
@@ -120,20 +152,20 @@ export default async function MarketPage({ params }: Props) {
           </div>
         )}
 
-        {/* Best Takes */}
+        {/* Best takes */}
         {sentiment?.best_takes && sentiment.best_takes.length > 0 && (
-          <div className="space-y-2">
-            <p className="text-xs text-gray-500 uppercase tracking-wide">Top Community Takes</p>
+          <div>
+            <p style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.07em", textTransform: "uppercase", color: "var(--text-lo)", marginBottom: 10 }}>
+              Top Community Takes
+            </p>
             <BestTakes takes={sentiment.best_takes} />
           </div>
         )}
 
         {sentiment?.volume_label && (
-          <p className="text-xs text-gray-500">Discussion volume: {sentiment.volume_label}</p>
-        )}
-
-        {market?.question && (
-          <p className="text-xs text-gray-600">Polymarket: {market.question}</p>
+          <p style={{ fontSize: 11, color: "var(--text-lo)" }}>
+            Discussion volume: {sentiment.volume_label}
+          </p>
         )}
       </div>
     </main>

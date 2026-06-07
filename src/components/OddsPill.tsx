@@ -5,15 +5,34 @@ interface OddsPillProps {
 }
 
 export function OddsPill({ odds }: OddsPillProps) {
-  if (odds === null) {
-    return <span className="rounded-full bg-white/10 px-2 py-0.5 text-xs text-gray-400">N/A</span>
+  const invalid = odds === null || odds === undefined || odds <= 0
+  if (invalid) {
+    return (
+      <span className="mono" style={{
+        padding: "2px 8px",
+        borderRadius: 100,
+        fontSize: 12,
+        background: "var(--border)",
+        color: "var(--text-lo)",
+      }}>
+        —
+      </span>
+    )
   }
   const color =
-    odds >= 70 ? "bg-green-500/20 text-green-300" :
-    odds >= 40 ? "bg-yellow-500/20 text-yellow-300" :
-    "bg-red-500/20 text-red-300"
+    odds >= 65 ? { bg: "var(--bull-dim)", text: "var(--bull)" } :
+    odds <= 35 ? { bg: "var(--bear-dim)", text: "var(--bear)" } :
+    { bg: "var(--border)",  text: "var(--text-mid)" }
+
   return (
-    <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${color}`}>
+    <span className="mono" style={{
+      padding: "2px 8px",
+      borderRadius: 100,
+      fontSize: 12,
+      fontWeight: 600,
+      background: color.bg,
+      color: color.text,
+    }}>
       {odds}%
     </span>
   )

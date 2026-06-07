@@ -5,10 +5,10 @@ import type { DashboardRow } from "@/app/api/dashboard/route"
 import { X } from "lucide-react"
 import { OddsPill } from "./OddsPill"
 import { SentimentBar } from "./SentimentBar"
-import { DivergenceSignal } from "./DivergenceSignal"
+import { DivergenceCell } from "./DivergenceCell"
 import { BriefAge } from "./BriefAge"
-import { TrendChart } from "./TrendChart"
 import { BestTakes } from "./BestTakes"
+import { Sparkline } from "./Sparkline"
 
 interface MarketDrawerProps {
   row: DashboardRow | null
@@ -27,85 +27,184 @@ export function MarketDrawer({ row, onClose }: MarketDrawerProps) {
 
   if (!row) return null
 
-  const sentimentOdds = row.sentiment
-    ? Math.round((row.sentiment.score + 100) / 2)
-    : undefined
+  const signal = row.divergence
+    ? ({
+        crowd_bullish: { label: "Crowd ahead",  color: "var(--info)" },
+        crowd_bearish: { label: "Crowd behind", color: "var(--bear)" },
+        aligned:       { label: "Aligned",      color: "var(--neutral)" },
+        watch:         { label: "Watch",         color: "var(--watch)" },
+      })[row.divergence.signal]
+    : null
 
   return (
     <div
       ref={overlayRef}
-      className="fixed inset-0 z-50 flex items-end justify-center sm:items-center"
       onClick={e => e.target === overlayRef.current && onClose()}
+      style={{
+        position: "fixed",
+        inset: 0,
+        zIndex: 50,
+        display: "flex",
+        alignItems: "flex-end",
+        justifyContent: "center",
+      }}
     >
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" />
-      <div className="relative z-10 flex max-h-[90vh] w-full max-w-lg flex-col rounded-t-2xl border border-white/10 bg-gray-900 sm:rounded-2xl">
+      {/* Backdrop */}
+      <div style={{
+        position: "absolute",
+        inset: 0,
+        background: "rgba(0,0,0,0.65)",
+        backdropFilter: "blur(4px)",
+      }} />
+
+      {/* Panel */}
+      <div
+        className="drawer-animate"
+        style={{
+          position: "relative",
+          zIndex: 10,
+          width: "100%",
+          maxWidth: 480,
+          maxHeight: "90vh",
+          display: "flex",
+          flexDirection: "column",
+          background: "var(--bg-panel)",
+          border: "1px solid var(--border)",
+          borderBottom: "none",
+          borderRadius: "16px 16px 0 0",
+        }}
+      >
         {/* Header */}
-        <div className="flex items-start justify-between gap-4 border-b border-white/10 p-5">
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="rounded bg-white/10 px-1.5 py-0.5 text-xs text-gray-400 capitalize">
-                {row.category}
-              </span>
-              <BriefAge savedAt={row.sentiment?.brief_saved_at ?? null} />
-            </div>
-            <h2 className="mt-1 text-lg font-bold text-white">{row.label}</h2>
+        <div style={{
+          display: "flex",
+          alignItems: "flex-start",
+          justifyContent: "space-between",
+          gap: 16,
+          padding: "20px 20px 16px",
+          borderBottom: "1px solid var(--border)",
+        }}>
+          <div style={{ minWidth: 0 }}>
+            <BriefAge savedAt={row.sentiment?.brief_saved_at ?? null} />
+            <h2 style={{
+              margin: "4px 0 2px",
+              fontSize: 17,
+              fontWeight: 700,
+              color: "var(--text-hi)",
+              lineHeight: 1.3,
+            }}>
+              {row.label}
+            </h2>
             {row.market?.question && (
-              <p className="mt-0.5 text-xs text-gray-500">{row.market.question}</p>
+              <p style={{ margin: 0, fontSize: 12, color: "var(--text-lo)" }}>
+                {row.market.question}
+              </p>
             )}
           </div>
-          <button onClick={onClose} className="rounded-lg p-1 text-gray-400 hover:text-white">
-            <X size={18} />
+          <button
+            onClick={onClose}
+            style={{
+              flexShrink: 0,
+              padding: 6,
+              borderRadius: 8,
+              background: "transparent",
+              border: "1px solid var(--border)",
+              color: "var(--text-mid)",
+              cursor: "pointer",
+              display: "flex",
+              alignItems: "center",
+            }}
+          >
+            <X size={15} />
           </button>
         </div>
 
-        <div className="overflow-y-auto p-5 space-y-5">
-          {/* Odds + Signal */}
-          <div className="flex items-center gap-4">
+        {/* Body */}
+        <div style={{ overflowY: "auto", padding: "16px 20px 24px", display: "flex", flexDirection: "column", gap: 20 }}>
+
+          {/* Metrics row */}
+          <div style={{ display: "flex", flexWrap: "wrap", gap: 20, alignItems: "center" }}>
             <div>
-              <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Market Odds</p>
+              <p style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.07em", textTransform: "uppercase", color: "var(--text-lo)", marginBottom: 6 }}>Market Odds</p>
               <OddsPill odds={row.market?.odds ?? null} />
             </div>
             <div>
-              <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Signal</p>
-              <DivergenceSignal divergence={row.divergence} />
+              <p style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.07em", textTransform: "uppercase", color: "var(--text-lo)", marginBottom: 6 }}>Divergence</p>
+              <DivergenceCell divergence={row.divergence} />
             </div>
-            {row.market?.volume != null && (
+            {signal && (
               <div>
-                <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Volume</p>
-                <p className="text-sm font-medium text-white">
+                <p style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.07em", textTransform: "uppercase", color: "var(--text-lo)", marginBottom: 6 }}>Signal</p>
+                <span style={{
+                  fontSize: 12,
+                  fontWeight: 600,
+                  color: signal.color,
+                  background: `${signal.color}18`,
+                  padding: "4px 10px",
+                  borderRadius: 100,
+                }}>
+                  {signal.label}
+                </span>
+              </div>
+            )}
+            {row.market?.volume != null && row.market.volume > 0 && (
+              <div>
+                <p style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.07em", textTransform: "uppercase", color: "var(--text-lo)", marginBottom: 6 }}>Volume</p>
+                <span className="mono" style={{ fontSize: 14, fontWeight: 600, color: "var(--text-hi)" }}>
                   ${(row.market.volume / 1_000).toFixed(0)}K
-                </p>
+                </span>
               </div>
             )}
           </div>
 
           {/* Sentiment */}
           {row.sentiment && (
-            <div className="space-y-2">
-              <p className="text-xs text-gray-500 uppercase tracking-wide">Social Sentiment</p>
-              <SentimentBar score={row.sentiment.score} confidence={row.sentiment.confidence} />
+            <div>
+              <p style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.07em", textTransform: "uppercase", color: "var(--text-lo)", marginBottom: 8 }}>
+                Social Sentiment
+              </p>
+              <SentimentBar score={row.sentiment.score} />
               {row.sentiment.summary && (
-                <p className="text-sm text-gray-300 leading-relaxed">{row.sentiment.summary}</p>
+                <p style={{ margin: "10px 0 0", fontSize: 13, color: "var(--text-mid)", lineHeight: 1.6 }}>
+                  {row.sentiment.summary}
+                </p>
               )}
             </div>
           )}
 
-          {/* Chart */}
-          {row.market?.history && row.market.history.length > 0 && (
+          {/* Sparkline chart */}
+          {row.market?.history && row.market.history.length >= 2 && (
             <div>
-              <p className="mb-2 text-xs text-gray-500 uppercase tracking-wide">7-Day Price History</p>
-              <TrendChart history={row.market.history} sentimentOdds={sentimentOdds} />
+              <p style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.07em", textTransform: "uppercase", color: "var(--text-lo)", marginBottom: 8 }}>
+                7-Day Price History
+              </p>
+              <div style={{
+                background: "var(--bg-base)",
+                borderRadius: 8,
+                border: "1px solid var(--border)",
+                padding: "10px 12px 8px",
+              }}>
+                <Sparkline
+                  history={row.market.history}
+                  currentOdds={row.market.odds > 0 ? row.market.odds : undefined}
+                />
+                <div style={{ display: "flex", justifyContent: "space-between", marginTop: 4 }}>
+                  <span style={{ fontSize: 10, color: "var(--text-lo)" }}>7d ago</span>
+                  <span style={{ fontSize: 10, color: "var(--text-lo)" }}>now</span>
+                </div>
+              </div>
             </div>
           )}
 
-          {/* Key Signals */}
+          {/* Key signals */}
           {row.sentiment?.signals && row.sentiment.signals.length > 0 && (
             <div>
-              <p className="mb-2 text-xs text-gray-500 uppercase tracking-wide">Key Signals</p>
-              <ul className="space-y-1">
+              <p style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.07em", textTransform: "uppercase", color: "var(--text-lo)", marginBottom: 8 }}>
+                Key Signals
+              </p>
+              <ul style={{ margin: 0, padding: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: 6 }}>
                 {row.sentiment.signals.map((s, i) => (
-                  <li key={i} className="flex items-start gap-2 text-sm text-gray-300">
-                    <span className="mt-1.5 h-1 w-1 flex-shrink-0 rounded-full bg-blue-400" />
+                  <li key={i} style={{ display: "flex", alignItems: "flex-start", gap: 8, fontSize: 13, color: "var(--text-mid)" }}>
+                    <span style={{ marginTop: 6, flexShrink: 0, width: 4, height: 4, borderRadius: "50%", background: "var(--info)", display: "block" }} />
                     {s}
                   </li>
                 ))}
@@ -113,17 +212,19 @@ export function MarketDrawer({ row, onClose }: MarketDrawerProps) {
             </div>
           )}
 
-          {/* Best Takes */}
+          {/* Best takes */}
           {row.sentiment?.best_takes && row.sentiment.best_takes.length > 0 && (
             <div>
-              <p className="mb-2 text-xs text-gray-500 uppercase tracking-wide">Top Community Takes</p>
+              <p style={{ fontSize: 10, fontWeight: 600, letterSpacing: "0.07em", textTransform: "uppercase", color: "var(--text-lo)", marginBottom: 8 }}>
+                Top Community Takes
+              </p>
               <BestTakes takes={row.sentiment.best_takes} />
             </div>
           )}
 
           {/* Volume label */}
           {row.sentiment?.volume_label && (
-            <p className="text-xs text-gray-500">
+            <p style={{ fontSize: 11, color: "var(--text-lo)", margin: 0 }}>
               Discussion volume: {row.sentiment.volume_label}
             </p>
           )}

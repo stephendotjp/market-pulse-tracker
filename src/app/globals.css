@@ -1,19 +1,70 @@
 @import "tailwindcss";
 
 :root {
-  --background: #0d1117;
-  --foreground: #e6edf3;
+  /* Backgrounds */
+  --bg-base:      #0A0B0D;
+  --bg-panel:     #131519;
+  --bg-row:       transparent;
+  --bg-row-hover: #1A1D23;
+  --border:       #23262D;
+
+  /* Text */
+  --text-hi:      #F2F4F7;
+  --text-mid:     #9BA1AC;
+  --text-lo:      #5E646E;
+
+  /* Semantic */
+  --bull:         #2FBF71;
+  --bull-dim:     #1C3A2C;
+  --bear:         #E5484D;
+  --bear-dim:     #3A1E20;
+  --neutral:      #8A909B;
+  --watch:        #E2A33B;
+  --info:         #3E9DE8;
+
+  /* Category accents */
+  --cat-macro:    #7C8CF8;
+  --cat-crypto:   #F5A623;
+  --cat-equities: #4FD1C5;
+  --cat-politics: #E573B5;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
+* {
+  box-sizing: border-box;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  background: var(--bg-base);
+  color: var(--text-hi);
+  font-family: var(--font-geist-sans), sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.mono {
+  font-family: var(--font-geist-mono), "JetBrains Mono", monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(16px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(3px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+
+.drawer-animate {
+  animation: slideUp 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.row-enter {
+  animation: fadeIn 0.18s ease forwards;
+  opacity: 0;
 }
