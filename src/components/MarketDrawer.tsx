@@ -144,6 +144,29 @@ export function MarketDrawer({ row, onClose }: MarketDrawerProps) {
               <BestTakes takes={row.sentiment.best_takes} />
             </div>
           )}
+
+          {row.market?.marketUrl && (
+            <a
+              href={row.market.marketUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 6,
+                padding: "10px 16px",
+                background: "var(--info)",
+                color: "#fff",
+                borderRadius: 8,
+                fontSize: 13,
+                fontWeight: 600,
+                textDecoration: "none",
+              }}
+            >
+              View on Polymarket ↗
+            </a>
+          )}
         </div>
       </div>
     </div>

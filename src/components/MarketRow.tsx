@@ -4,6 +4,7 @@ import type { DashboardRow } from "@/app/api/dashboard/route"
 import { DivergenceCell } from "./DivergenceCell"
 import { SentimentBar } from "./SentimentBar"
 import { formatDistanceToNow } from "date-fns"
+import { ExternalLink } from "lucide-react"
 
 const catColors: Record<string, string> = {
   macro:    "var(--cat-macro)",
@@ -78,8 +79,22 @@ export function MarketRow({ row, onClick, isLast, index, isSelected }: MarketRow
           }}>
             {row.category}
           </span>
-          <span style={{ fontWeight: 600, fontSize: 14, color: "var(--text-hi)", lineHeight: 1.3 }}>
-            {row.label}
+          <span style={{ display: "flex", alignItems: "center", gap: 5 }}>
+            <span style={{ fontWeight: 600, fontSize: 14, color: "var(--text-hi)", lineHeight: 1.3 }}>
+              {row.label}
+            </span>
+            {row.market?.marketUrl && (
+              <a
+                href={row.market.marketUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={e => e.stopPropagation()}
+                style={{ color: "var(--text-lo)", display: "flex", alignItems: "center", flexShrink: 0 }}
+                title="View on Polymarket"
+              >
+                <ExternalLink size={12} />
+              </a>
+            )}
           </span>
           {row.market?.question && (
             <span style={{

@@ -9,6 +9,7 @@ export interface MarketOdds {
   question: string
   yesTokenId: string | null
   history: PricePoint[]
+  marketUrl: string | null
 }
 
 // Gamma returns outcomes/outcomePrices/clobTokenIds as JSON-encoded strings
@@ -44,6 +45,7 @@ export async function getMarketByConditionId(conditionId: string): Promise<Marke
     question: m.question ?? "",
     yesTokenId,
     history,
+    marketUrl: m.slug ? `https://polymarket.com/event/${m.slug}` : null,
   }
 }
 
