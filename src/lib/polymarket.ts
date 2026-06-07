@@ -45,7 +45,7 @@ export async function getMarketByConditionId(conditionId: string): Promise<Marke
     question: m.question ?? "",
     yesTokenId,
     history,
-    marketUrl: m.slug ? `https://polymarket.com/event/${m.slug}` : null,
+    marketUrl: m.events?.[0]?.slug ? `https://polymarket.com/event/${m.events[0].slug}` : null,
   }
 }
 
