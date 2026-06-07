@@ -7,19 +7,16 @@ interface BriefAgeProps {
 }
 
 export function BriefAge({ savedAt }: BriefAgeProps) {
-  if (!savedAt) return <span className="text-xs text-gray-500">No brief</span>
-  let label = "Unknown"
-  let stale = false
+  if (!savedAt) return <span style={{ fontSize: 11, color: "var(--text-lo)" }}>No brief</span>
   try {
     const d = new Date(savedAt)
-    label = formatDistanceToNow(d, { addSuffix: true })
-    stale = Date.now() - d.getTime() > 7 * 24 * 60 * 60 * 1000
+    const stale = Date.now() - d.getTime() > 7 * 24 * 60 * 60 * 1000
+    return (
+      <span style={{ fontSize: 11, color: stale ? "var(--watch)" : "var(--text-lo)" }}>
+        Brief {formatDistanceToNow(d, { addSuffix: true })}
+      </span>
+    )
   } catch {
-    label = "Unknown"
+    return <span style={{ fontSize: 11, color: "var(--text-lo)" }}>—</span>
   }
-  return (
-    <span className={`text-xs ${stale ? "text-yellow-400" : "text-gray-400"}`}>
-      Brief {label}
-    </span>
-  )
 }

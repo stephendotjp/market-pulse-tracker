@@ -5,7 +5,7 @@ const catColors: Record<string, string> = {
   crypto:   "var(--cat-crypto)",
   equities: "var(--cat-equities)",
   politics: "var(--cat-politics)",
-  all:      "var(--text-hi)",
+  all:      "var(--text-mid)",
 }
 
 interface CategoryTabsProps {
@@ -27,26 +27,23 @@ export function CategoryTabs({ categories, active, onChange, counts }: CategoryT
             key={cat}
             onClick={() => onChange(cat)}
             style={{
-              padding: "5px 12px",
+              padding: "5px 13px",
               borderRadius: 100,
-              fontSize: 11,
+              fontSize: 12,
               fontWeight: isActive ? 600 : 500,
-              letterSpacing: "0.04em",
-              textTransform: "capitalize",
               cursor: "pointer",
               transition: "all 0.12s",
-              border: isActive ? "1px solid transparent" : "1px solid var(--border)",
-              background: isActive ? color : "transparent",
-              color: isActive ? "var(--bg-base)" : "var(--text-mid)",
+              border: `1px solid ${isActive ? color : "var(--border)"}`,
+              background: isActive ? color : "var(--bg-panel)",
+              color: isActive ? "#fff" : "var(--text-mid)",
               whiteSpace: "nowrap",
               outline: "none",
+              boxShadow: isActive ? `0 1px 4px ${color}40` : "none",
             }}
           >
             {cat}
             {counts?.[cat] !== undefined && (
-              <span style={{ marginLeft: 5, opacity: 0.65, fontSize: 10 }}>
-                {counts[cat]}
-              </span>
+              <span style={{ marginLeft: 5, opacity: 0.65, fontSize: 10 }}>{counts[cat]}</span>
             )}
           </button>
         )

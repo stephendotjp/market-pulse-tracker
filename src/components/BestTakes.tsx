@@ -23,13 +23,9 @@ export function BestTakes({ takes }: BestTakesProps) {
         }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6 }}>
             <span style={{
-              fontSize: 10,
-              fontWeight: 600,
-              letterSpacing: "0.04em",
-              padding: "1px 6px",
-              borderRadius: 3,
-              background: "var(--border)",
-              color: "var(--text-mid)",
+              fontSize: 10, fontWeight: 700,
+              padding: "1px 6px", borderRadius: 3,
+              background: "var(--border)", color: "var(--text-mid)",
             }}>
               {t.source}
             </span>

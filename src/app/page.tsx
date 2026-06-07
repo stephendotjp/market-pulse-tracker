@@ -5,10 +5,11 @@ import useSWR from "swr"
 import type { DashboardResponse, DashboardRow } from "@/app/api/dashboard/route"
 import { DivergenceTable } from "@/components/DivergenceTable"
 import { MarketDrawer } from "@/components/MarketDrawer"
+import { DetailPanel } from "@/components/DetailPanel"
 import { MissingBriefsWarning } from "@/components/MissingBriefsWarning"
 import { MetricCard } from "@/components/MetricCard"
 import { CategoryTabs } from "@/components/CategoryTabs"
-import { BestTakesStrip, type StripTake } from "@/components/BestTakesStrip"
+import type { StripTake } from "@/components/BestTakesStrip"
 import { RefreshCw } from "lucide-react"
 
 const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? ""
@@ -32,9 +33,7 @@ export default function DashboardPage() {
   const categoryCounts = useMemo(() => {
     if (!data?.rows) return {}
     const counts: Record<string, number> = { all: data.rows.length }
-    for (const r of data.rows) {
-      counts[r.category] = (counts[r.category] ?? 0) + 1
-    }
+    for (const r of data.rows) counts[r.category] = (counts[r.category] ?? 0) + 1
     return counts
   }, [data?.rows])
 
@@ -57,94 +56,82 @@ export default function DashboardPage() {
     return takes
   }, [data?.rows])
 
-  return (
-    <main style={{ minHeight: "100vh", background: "var(--bg-base)", padding: "20px 16px 48px" }}>
-      <div style={{ maxWidth: 1100, margin: "0 auto", display: "flex", flexDirection: "column", gap: 20 }}>
+  const handleRowClick = (row: DashboardRow) => {
+    setActiveRow(prev => prev?.slug === row.slug ? null : row)
+  }
 
-        {/* Header */}
-        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 16, flexWrap: "wrap" }}>
-          <div>
-            <h1 style={{ margin: 0, fontSize: 20, fontWeight: 700, color: "var(--text-hi)", letterSpacing: "-0.02em" }}>
-              Market Pulse
-            </h1>
-            <p style={{ margin: "3px 0 0", fontSize: 12, color: "var(--text-lo)" }}>
-              Polymarket odds vs. social sentiment divergence
-            </p>
+  return (
+    <>
+      {/* Desktop: two-column split */}
+      <div className="dashboard-root">
+
+        {/* ── Left: table column ── */}
+        <div className="table-col">
+          {/* Header */}
+          <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 20 }}>
+            <div>
+              <h1 style={{ margin: 0, fontSize: 20, fontWeight: 700, color: "var(--text-hi)", letterSpacing: "-0.02em" }}>
+                Market Pulse
+              </h1>
+              <p style={{ margin: "3px 0 0", fontSize: 12, color: "var(--text-lo)" }}>
+                Polymarket odds vs. social sentiment · {data?.stats.total ?? "—"} markets tracked
+              </p>
+            </div>
+            {isLoading && <RefreshCw size={14} style={{ color: "var(--text-lo)", marginTop: 6 }} />}
           </div>
-          {isLoading && (
-            <RefreshCw size={14} style={{ color: "var(--text-lo)", marginTop: 6 }} className="animate-spin" />
+
+          {/* Stats */}
+          {data && (
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 10, marginBottom: 20 }}>
+              <MetricCard label="Markets" value={data.stats.total} />
+              <MetricCard label="Signals" value={data.stats.signals_flagged}
+                highlight={data.stats.signals_flagged > 0} accentColor={data.stats.signals_flagged > 0 ? "var(--watch)" : undefined} />
+              <MetricCard label="Avg divergence" value={`${data.stats.avg_divergence}pt`} />
+              <MetricCard label="Missing briefs" value={data.missing_briefs.length}
+                highlight={data.missing_briefs.length > 0} accentColor={data.missing_briefs.length > 0 ? "var(--bear)" : undefined} />
+            </div>
           )}
+
+          {data?.missing_briefs && data.missing_briefs.length > 0 && (
+            <div style={{ marginBottom: 16 }}>
+              <MissingBriefsWarning slugs={data.missing_briefs} />
+            </div>
+          )}
+
+          {/* Tabs */}
+          <div style={{ marginBottom: 12 }}>
+            <CategoryTabs categories={categories} active={activeCategory} onChange={setActiveCategory} counts={categoryCounts} />
+          </div>
+
+          {/* Skeleton */}
+          {isLoading && !data && (
+            <div style={{ background: "var(--bg-panel)", borderRadius: 12, border: "1px solid var(--border)", overflow: "hidden" }}>
+              {Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} style={{ height: 64, borderBottom: i < 3 ? "1px solid var(--border)" : "none", background: i % 2 === 0 ? "var(--bg-panel)" : "var(--bg-base)", opacity: 0.6 }} />
+              ))}
+            </div>
+          )}
+
+          {/* Table */}
+          {!isLoading && (
+            <DivergenceTable rows={filteredRows} onRowClick={handleRowClick} selectedSlug={activeRow?.slug} />
+          )}
+
+          <p style={{ fontSize: 11, color: "var(--text-lo)", marginTop: 12, textAlign: "right" }}>
+            Refreshes every 5 min · Sentiment from last30days briefs
+          </p>
         </div>
 
-        {/* Stats */}
-        {data && (
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 10 }}>
-            <MetricCard label="Markets" value={data.stats.total} />
-            <MetricCard
-              label="Signals"
-              value={data.stats.signals_flagged}
-              highlight={data.stats.signals_flagged > 0}
-              accentColor={data.stats.signals_flagged > 0 ? "var(--watch)" : undefined}
-            />
-            <MetricCard label="Avg divergence" value={`${data.stats.avg_divergence}pt`} />
-            <MetricCard
-              label="Missing briefs"
-              value={data.missing_briefs.length}
-              highlight={data.missing_briefs.length > 0}
-              accentColor={data.missing_briefs.length > 0 ? "var(--bear)" : undefined}
-            />
-          </div>
-        )}
-
-        {/* Missing briefs */}
-        {data?.missing_briefs && data.missing_briefs.length > 0 && (
-          <MissingBriefsWarning slugs={data.missing_briefs} />
-        )}
-
-        {/* Filters */}
-        <CategoryTabs
-          categories={categories}
-          active={activeCategory}
-          onChange={setActiveCategory}
-          counts={categoryCounts}
-        />
-
-        {/* Skeleton */}
-        {isLoading && !data && (
-          <div style={{
-            background: "var(--bg-panel)",
-            borderRadius: 12,
-            border: "1px solid var(--border)",
-            overflow: "hidden",
-          }}>
-            {Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} style={{
-                height: 64,
-                borderBottom: i < 3 ? "1px solid var(--border)" : "none",
-                background: i % 2 === 0 ? "transparent" : "var(--bg-row-hover)",
-                animation: "pulse 1.5s ease infinite",
-                opacity: 0.4,
-              }} />
-            ))}
-          </div>
-        )}
-
-        {/* Table */}
-        {!isLoading && (
-          <DivergenceTable rows={filteredRows} onRowClick={setActiveRow} />
-        )}
-
-        {/* Best takes strip */}
-        {bestTakes.length > 0 && (
-          <BestTakesStrip takes={bestTakes} />
-        )}
-
-        <p style={{ fontSize: 11, color: "var(--text-lo)", textAlign: "center" }}>
-          Refreshes every 5 min · Sentiment from last30days briefs
-        </p>
+        {/* ── Right: detail panel (desktop only) ── */}
+        <div className="detail-col">
+          <DetailPanel row={activeRow} bestTakes={bestTakes} />
+        </div>
       </div>
 
-      <MarketDrawer row={activeRow} onClose={() => setActiveRow(null)} />
-    </main>
+      {/* Mobile-only bottom-sheet drawer */}
+      <div className="mobile-only">
+        <MarketDrawer row={activeRow} onClose={() => setActiveRow(null)} />
+      </div>
+    </>
   )
 }

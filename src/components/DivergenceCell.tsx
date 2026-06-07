@@ -8,11 +8,8 @@ interface DivergenceCellProps {
 
 export function DivergenceCell({ divergence }: DivergenceCellProps) {
   if (!divergence) {
-    return (
-      <span className="mono" style={{ color: "var(--text-lo)", fontSize: 16 }}>—</span>
-    )
+    return <span className="mono" style={{ color: "var(--text-lo)", fontSize: 16 }}>—</span>
   }
-
   const { raw, signal } = divergence
   const color =
     signal === "crowd_bullish" ? "var(--bull)" :
@@ -24,18 +21,11 @@ export function DivergenceCell({ divergence }: DivergenceCellProps) {
   const sign  = raw > 0 ? "+" : ""
 
   return (
-    <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 4 }}>
-      <span style={{ fontSize: 13, color, opacity: 0.7 }}>{arrow}</span>
-      <span
-        className="mono"
-        style={{
-          fontSize: 20,
-          fontWeight: 700,
-          color,
-          lineHeight: 1,
-          letterSpacing: "-0.02em",
-        }}
-      >
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "flex-end", gap: 3 }}>
+      <span style={{ fontSize: 12, color, opacity: 0.65 }}>{arrow}</span>
+      <span className="mono" style={{
+        fontSize: 20, fontWeight: 700, color, lineHeight: 1, letterSpacing: "-0.02em",
+      }}>
         {sign}{raw}
       </span>
     </div>
